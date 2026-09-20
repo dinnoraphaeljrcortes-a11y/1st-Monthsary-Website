@@ -208,19 +208,6 @@
   .memory-box p{font-size:.9rem;line-height:1.5}
 
   .surprise{padding:40px 25px;text-align:center}
-  .qr-card{
-    margin:25px auto 0;max-width:430px;padding:25px;
-    background:#fff;border-radius:22px;border:1px solid #ffd0da;
-  }
-  #qrcode{
-    width:190px;height:190px;margin:15px auto;
-    display:grid;place-items:center;
-  }
-  #qrcode img{width:190px!important;height:190px!important;border-radius:8px}
-  .qr-input{
-    width:100%;padding:12px;border:1px solid #f0a9b9;border-radius:12px;
-    font:inherit;outline:none;margin-top:5px
-  }
   .btn{
     border:0;background:#ed6685;color:white;font-weight:800;
     padding:12px 20px;border-radius:999px;cursor:pointer;margin-top:12px;
@@ -258,7 +245,6 @@
       <li><a href="#home">Home</a></li>
       <li><a href="#letter">Our Letter</a></li>
       <li><a href="#memories">Memories</a></li>
-      <li><a href="#surprise">Surprise</a></li>
     </ul>
   </nav>
 </header>
@@ -295,7 +281,7 @@
     <h2>💌 A Little Letter For You</h2>
     <p class="hint">Tap the envelope to open my letter.</p>
 
-    <div class="envelope" id="envelope" onclick="openLetter()">
+    <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Open the letter" onclick="openLetter()" onkeydown="if(event.key==='Enter' || event.key===' '){event.preventDefault();openLetter();}">
       <div class="env-body"></div>
       <div class="flap"></div>
       <div class="seal">♡</div>
@@ -357,30 +343,11 @@
       </div>
     </div>
   </section>
-
-  <section class="card surprise" id="surprise">
-    <h2>📷 A Little Surprise</h2>
-    <p class="hint">Scan the QR code to open our monthsary website. 💗</p>
-
-    <div class="qr-card">
-      <input class="qr-input" id="qrUrl"
-        placeholder="Paste your public website link here"
-        aria-label="Website URL">
-      <div id="qrcode"></div>
-      <button class="btn" onclick="makeQR()">✨ Generate Website QR</button>
-      <p id="qrStatus" style="margin-top:12px;font-size:.85rem;color:#98717a">
-        Upload this HTML online first, then paste its public <b>https://</b> link here.
-      </p>
-    </div>
-  </section>
 </main>
 
 <footer>
   Made with lots of love <span class="heart">♥</span> for our first month.
 </footer>
-
-<!-- QR generator library -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <script>
   // Envelope
@@ -410,51 +377,7 @@
   // Initial celebration
   window.addEventListener("load",()=>{
     setTimeout(()=>burstConfetti(90),500);
-    // Generate the QR after the public website URL is available.
   });
-
-  // QR code that opens the actual website
-  function makeQR(){
-    const box = document.getElementById("qrcode");
-    const input = document.getElementById("qrUrl");
-    const status = document.getElementById("qrStatus");
-
-    let url = input.value.trim();
-
-    // If the page is hosted online, automatically use this page's URL.
-    if(!url && (location.protocol === "http:" || location.protocol === "https:")){
-      url = location.href.split("#")[0];
-      input.value = url;
-    }
-
-    box.innerHTML = "";
-
-    if(!url){
-      status.innerHTML = "⚠️ Upload this HTML to a public website first, then paste its <b>https://</b> link here.";
-      status.style.color = "#d95777";
-      return;
-    }
-
-    if(!/^https?:\/\//i.test(url)){
-      status.innerHTML = "⚠️ Please enter a full website link beginning with <b>https://</b>";
-      status.style.color = "#d95777";
-      return;
-    }
-
-    if(window.QRCode){
-      new QRCode(box,{
-        text:url,
-        width:190,
-        height:190,
-        correctLevel:QRCode.CorrectLevel.H
-      });
-      status.innerHTML = "✅ Scan this QR code with a phone to open the website.";
-      status.style.color = "#98717a";
-    }else{
-      box.innerHTML = "<p style='font-size:.8rem;color:#b05a6f'>QR library needs internet to load.</p>";
-    }
-  }
-
 </script>
 
 </body>
